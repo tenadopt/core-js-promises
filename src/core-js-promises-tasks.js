@@ -17,14 +17,8 @@
  * 0    => promise that will be fulfilled
  * 1    => promise that will be fulfilled
  */
-function getPromise(number) {
-  return new Promise((resolve, reject) => {
-    if (number < 0) {
-      reject(new Error('Number is negative.'));
-    } else {
-      resolve(number);
-    }
-  });
+function getPromise(/* number */) {
+  throw new Error('Not implemented');
 }
 
 /**
@@ -151,8 +145,17 @@ function getAllResult(promises) {
  * [promise1, promise4, promise3] => Promise.resolved('104030')
  * [promise1, promise4, promise3, promise2] => Promise.resolved('10403020')
  */
-function queuePromises(/* promises */) {
-  throw new Error('Not implemented');
+function queuePromises(promises) {
+  let result = '';
+  return promises
+    .reduce((chain, currentPromise) => {
+      return chain.then(() => {
+        return currentPromise.then((value) => {
+          result += String(value);
+        });
+      });
+    }, Promise.resolve())
+    .then(() => result);
 }
 
 module.exports = {
